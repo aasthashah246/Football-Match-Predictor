@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Football Match Predictor</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static',filename='style.css')}}">
+  <link href="https://cdn.jsdelivr.net/npm/tom-select/dist/css/tom-select.css" rel="stylesheet">
+
+</head>
+<body>
+
+  <!-- Ambient pitch background -->
+  <div class="pitch-backdrop" aria-hidden="true">
+    <div class="pitch-stripes"></div>
+    <div class="pitch-circle"></div>
+    <div class="pitch-halfline"></div>
+  </div>
+
+  <main class="page">
+
+    <header class="hero">
+      <p class="hero__eyebrow">Powered by Machine Learning</p>
+      <h1 class="hero__title">Football Match Predictor</h1>
+      <p class="hero__subtitle">
+        Pick two teams, set the stage, and let a trained ML model forecast the
+        outcome — winner, scoreline confidence, and more, before a ball is kicked.
+      </p>
+    </header>
+
+    <section class="card predictor-card" aria-labelledby="form-heading">
+      <div class="card__stitching" aria-hidden="true"></div>
+
+      <h2 id="form-heading" class="card__heading">Match Setup</h2>
+
+      <form
+        id="predict-form"
+        class="predict-form"
+        action="/predict"
+        method="POST"
+        >
+
+        <div class="field-row">
+          <div class="field">
+            <label for="home-team">Home Team</label>
+            <select id="home-team" name="homeTeam" required>
+              <option value="" disabled selected>Select home team</option>
+              {% for team in teams %}
+                <option value="{{ team }}">{{ team }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="away-team">Away Team</label>
+            <select id="away-team" name="awayTeam" required>
+              <option value="" disabled selected>Select away team</option>
+              {% for team in teams %}
+                <option value="{{ team }}">{{ team }}</option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="tournament">Tournament</label>
+          <select id="tournament" name="tournament" required>
+            <option value="" disabled selected>Select tournament</option>
+            {% for tournament in tournaments %}
+                <option value="{{ tournament }}">{{ tournament }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label for="city">City</label>
+            <select id="city" name="city" required>
+              <option value="" disabled selected>Select city</option>
+              {% for city in cities %}
+                <option value="{{ city }}">{{ city }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="country">Country</label>
+            <select id="country" name="country" required>
+              <option value="" disabled selected>Select country</option>
+              {% for country in countries %}
+                <option value="{{ country }}">{{ country }}</option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+
+        <fieldset class="field toggle-field">
+          <legend>Neutral Venue</legend>
+          <div class="toggle-group" role="radiogroup" aria-label="Neutral venue">
+            <input type="radio" id="neutral-yes" name="neutralVenue" value="yes">
+            <label class="toggle-pill" for="neutral-yes">Yes</label>
+
+            <input type="radio" id="neutral-no" name="neutralVenue" value="no" checked>
+            <label class="toggle-pill" for="neutral-no">No</label>
+          </div>
+        </fieldset>
+
+        <button type="submit" class="predict-btn">
+          <span>Predict Match</span>
+          <svg class="predict-btn__icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </form>
+    </section>
+
+    <section class="card result-card" aria-labelledby="result-heading" id="result-card">
+
+
+    <h2 id="result-heading" class="card__heading">
+        Prediction
+    </h2>
+
+    {% if prediction %}
+
+    <div class="result-content">
+
+    <div class="result-section">
+        <span class="result-label">⚽ Match</span>
+        <h3>{{ home_team }} vs {{ away_team }}</h3>
+    </div>
+
+    <div class="result-section">
+        <span class="result-label">🏆 Prediction</span>
+        <div class="prediction-badge">
+            <b>{{ prediction }}</b>
+        </div>
+    </div>
+
+    
+    <div class="result-section">
+
+    <div class="confidence-header">
+
+        <span class="result-label">
+            📊 Confidence
+        </span>
+
+        <span class="confidence-value">
+            {{ confidence }}%
+        </span>
+
+    </div>
+
+    <div class="confidence-bar">
+
+        <div
+            class="confidence-fill"
+            style="width: {{ confidence }}%;">
+        </div>
+
+    </div>
+
+    </div>
+
+    {% else %}
+
+    <div class="result-placeholder">
+
+        <p>Prediction will appear here.</p>
+
+        <span class="result-placeholder__hint">
+            Fill in the match details above and hit "Predict Match".
+        </span>
+
+    </div>
+
+    {% endif %}
+
+    </section>
+    <footer class="page-footer">
+      <p>Powered by Flask • Random Forest • HTML • CSS • JavaScript</p>
+    </footer>
+
+  </main>
+  <script src="https://cdn.jsdelivr.net/npm/tom-select/dist/js/tom-select.complete.min.js"></script>
+  <script src="{{ url_for('static', filename='script.js') }}"></script> 
+  
+</body>
+</html>
+   

@@ -1,0 +1,529 @@
+/* ============================================
+   Tokens
+   ============================================ */
+:root {
+  --pitch-dark: #052e1c;
+  --pitch: #0b6e3f;
+  --pitch-bright: #22c55e;
+  --pitch-light: #34d399;
+  --mint: #eafbf1;
+  --white: #ffffff;
+  --ink: #0f1b13;
+  --muted: #5b6b62;
+  --line: rgba(255, 255, 255, 0.22);
+  --glass: rgba(255, 255, 255, 0.1);
+  --glass-strong: rgba(255, 255, 255, 0.85);
+  --shadow: rgba(2, 20, 12, 0.35);
+
+  --font-display: "Space Grotesk", "Segoe UI", sans-serif;
+  --font-body: "Inter", "Segoe UI", sans-serif;
+
+  --radius-lg: 28px;
+  --radius-md: 16px;
+  --radius-sm: 10px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: var(--font-body);
+  color: var(--ink);
+  background: var(--pitch-dark);
+  overflow-x: hidden;
+}
+
+/* ============================================
+   Ambient pitch backdrop (signature element)
+   ============================================ */
+.pitch-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(160deg, #052e1c 0%, #0b6e3f 48%, #0a4a2c 100%);
+  overflow: hidden;
+}
+
+.pitch-stripes {
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    100deg,
+    rgba(255, 255, 255, 0.035) 0px,
+    rgba(255, 255, 255, 0.035) 90px,
+    transparent 90px,
+    transparent 180px
+  );
+}
+
+.pitch-circle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: min(70vw, 720px);
+  height: min(70vw, 720px);
+  border: 1.5px solid rgba(255, 255, 255, 0.09);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.pitch-halfline {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 1.5px;
+  background: rgba(255, 255, 255, 0.07);
+}
+
+/* ============================================
+   Layout
+   ============================================ */
+.page {
+  position: relative;
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 64px 24px 48px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* ============================================
+   Hero
+   ============================================ */
+.hero {
+  text-align: center;
+  margin-bottom: 40px;
+  animation: fade-up 0.7s ease both;
+}
+
+.hero__eyebrow {
+  font-family: var(--font-display);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--pitch-light);
+  margin: 0 0 10px;
+}
+
+.hero__title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(2.1rem, 5vw, 3.2rem);
+  line-height: 1.08;
+  margin: 0 0 16px;
+  color: var(--white);
+  letter-spacing: -0.01em;
+}
+
+.hero__subtitle {
+  font-size: 1.02rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.78);
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+/* ============================================
+   Card shell (glassmorphism)
+   ============================================ */
+.card {
+  position: relative;
+  width: 100%;
+  background: var(--glass);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  padding: 32px;
+  box-shadow: 0 24px 60px -20px var(--shadow);
+  margin-bottom: 28px;
+  animation: fade-up 0.8s ease both;
+}
+
+.predictor-card {
+  animation-delay: 0.1s;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0.06));
+}
+
+.card__heading {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.15rem;
+  color: var(--white);
+  margin: 0 0 22px;
+}
+
+/* stitching accent along top of predictor card */
+.card__stitching {
+  position: absolute;
+  top: 14px;
+  left: 32px;
+  right: 32px;
+  height: 0;
+  border-top: 2px dashed rgba(255, 255, 255, 0.28);
+}
+
+/* ============================================
+   Form
+   ============================================ */
+.predict-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.field-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.field label,
+.toggle-field legend {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.85);
+  letter-spacing: 0.01em;
+}
+
+select {
+  appearance: none;
+  -webkit-appearance: none;
+  font-family: var(--font-body);
+  font-size: 0.96rem;
+  font-weight: 500;
+  color: var(--ink);
+  background-color: var(--glass-strong);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: var(--radius-sm);
+  padding: 12px 40px 12px 14px;
+  cursor: pointer;
+  transition: box-shadow 0.2s ease, transform 0.2s ease, background-color 0.2s ease;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='9' viewBox='0 0 14 9' fill='none'%3E%3Cpath d='M1 1l6 6 6-6' stroke='%230b6e3f' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+}
+
+select:hover {
+  background-color: var(--white);
+  transform: translateY(-1px);
+}
+
+select:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.55);
+}
+
+/* Neutral venue toggle */
+.toggle-field {
+  border: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.toggle-group {
+  display: inline-flex;
+  gap: 8px;
+}
+
+.toggle-group input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  width: 1px;
+  height: 1px;
+}
+
+.toggle-pill {
+  padding: 9px 22px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+.toggle-group input[type="radio"]:checked + .toggle-pill {
+  background: var(--pitch-bright);
+  border-color: var(--pitch-bright);
+  color: var(--pitch-dark);
+  box-shadow: 0 6px 16px -6px rgba(34, 197, 94, 0.7);
+}
+
+.toggle-pill:hover {
+  border-color: var(--pitch-bright);
+}
+
+.toggle-group input[type="radio"]:focus-visible + .toggle-pill {
+  outline: 2px solid var(--pitch-bright);
+  outline-offset: 2px;
+}
+
+/* ============================================
+   Predict button
+   ============================================ */
+.predict-btn {
+  margin-top: 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 15px 24px;
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--pitch-dark);
+  background: linear-gradient(135deg, #34d399, #16a34a);
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+  box-shadow: 0 12px 30px -10px rgba(22, 163, 74, 0.6);
+}
+
+.predict-btn:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.06);
+  box-shadow: 0 16px 36px -8px rgba(22, 163, 74, 0.75);
+}
+
+.predict-btn:active {
+  transform: translateY(0);
+}
+
+.predict-btn__icon {
+  width: 18px;
+  height: 18px;
+  transition: transform 0.2s ease;
+}
+
+.predict-btn:hover .predict-btn__icon {
+  transform: translateX(3px);
+}
+
+/* ============================================
+   Result card
+   ============================================ */
+result-card{
+    text-align:left;
+    overflow:hidden;
+}
+
+.result-placeholder{
+    padding:18px 0;
+    text-align:center;
+}
+
+.result-placeholder p{
+    color:#fff;
+    font-weight:600;
+}
+
+.result-placeholder__hint{
+    color:rgba(255,255,255,.65);
+}
+
+.result-content{
+    display:flex;
+    flex-direction:column;
+    gap:24px;
+    margin-top:8px;
+}
+
+.result-section{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+}
+
+.result-label{
+    color:rgba(255,255,255,.75);
+    font-size:.95rem;
+    font-weight:600;
+}
+
+.result-section h3{
+    margin:0;
+    color:#fff;
+    font-size:1.55rem;
+    font-weight:700;
+    font-family:var(--font-display);
+}
+
+.prediction-badge{
+    display:inline-block;
+    width:fit-content;
+    padding:10px 22px;
+    border-radius:999px;
+    background:linear-gradient(135deg,#22c55e,#16a34a);
+    color:#fff;
+    font-size:1.15rem;
+    font-weight:700;
+    box-shadow:0 8px 18px rgba(34,197,94,.35);
+}
+
+.confidence-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:10px;
+}
+
+.confidence-value{
+    color:#fff;
+    font-weight:700;
+}
+
+.confidence-bar{
+    width:100%;
+    height:12px;
+    background:rgba(255,255,255,.15);
+    border-radius:999px;
+    overflow:hidden;
+}
+
+.confidence-fill{
+    display:block;
+    height:100%;
+    background:linear-gradient(90deg,#34d399,#16a34a);
+    border-radius:999px;
+    transition:width .8s ease;
+}
+
+.page-footer{
+    margin-top:12px;
+    text-align:center;
+    color:rgba(255,255,255,.55);
+}
+/* ============================================
+   Footer
+   ============================================ */
+.page-footer {
+  margin-top: 12px;
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.45);
+  text-align: center;
+}
+
+/* ============================================
+   Motion
+   ============================================ */
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+/* ============================================
+   Responsive
+   ============================================ */
+@media (max-width: 560px) {
+  .page {
+    padding: 44px 16px 36px;
+  }
+
+  .card {
+    padding: 24px 20px;
+    border-radius: var(--radius-md);
+  }
+
+  .field-row {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+
+  .result-card__icon {
+    top: 24px;
+    right: 24px;
+  }
+
+  .card__stitching {
+    left: 20px;
+    right: 20px;
+  }
+  .prediction-box{
+    display:inline-block;
+
+    padding:8px 18px;
+
+    border-radius:999px;
+
+    background:#22c55e;
+
+    color:white;
+
+    font-size:1.1rem;
+
+    font-weight:700;
+    /* ---------- Confidence ---------- */
+  }
+
+.result-section h3{
+
+    margin:0;
+
+    color:#fff;
+
+    font-size:1.6rem;
+
+    font-weight:700;
+
+}
+.prediction-badge{
+
+    display:inline-block;
+
+    width:fit-content;
+
+    padding:10px 20px;
+
+    border-radius:999px;
+
+    background:#22c55e;
+
+    color:#fff;
+
+    font-size:1.2rem;
+
+    font-weight:700;
+
+}
+
+}
+
+
